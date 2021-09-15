@@ -5,8 +5,7 @@ const bcrypt = require("bcrypt");
 const Message = require("./message")
 
 const {
-  BCRYPT_WORK_FACTOR,
-  SECRET_KEY
+  BCRYPT_WORK_FACTOR
 } = require("../config");
 
 /** User of the site. */
@@ -24,15 +23,15 @@ class User {
   *    {username, password, first_name, last_name, phone}
   */
 
-  static async register({username, password, first_name, last_name, phone}){
+  static async register(username, password, first_name, last_name, phone){
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     const results = await db.query(`
-      INSERT INTO users (username, password, first_name, last_name, phone, joined_at)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURN username, password, first_name, last_name, phone`,
-      [username, hashedPassword, first_name, last_name, phone, 'current_timestamp'])
+      INSERT INTO users (username, password, first_name, last_name, phone, join_at)
+      VALUES ($1, $2, $3, $4, $5, current_timestamp)
+      RETURNING username, password, first_name, last_name, phone`,
+      [username, hashedPassword, first_name, last_name, phone])
 
-    return results.rows.map(c => new User(c));
+    return {username, password, first_name, last_name, phone};
   }
 
   /** Authenticate: is this username/password valid? Returns boolean. */
