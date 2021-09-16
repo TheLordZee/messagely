@@ -1,5 +1,5 @@
 const express = require("express");
-const expressError = require("../expressError");
+const ExpressError = require("../expressError");
 const router = new express.Router();
 const db = require("../db");
 const jwt = require("jsonwebtoken");
@@ -63,7 +63,7 @@ router.post('/register', async (req, res, next) => {
     try{
         const {username, password, first_name, last_name, phone} = req.body;
         if(!username || !password || !first_name || !last_name || !phone){
-            throw new expressError("Missing needed info", 400)
+            throw new ExpressError("Missing needed info", 400)
         }
         const user = await User.register(username, password, first_name, last_name, phone)
         const token = jwt.sign({

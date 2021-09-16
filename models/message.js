@@ -7,7 +7,7 @@ const ExpressError = require("../expressError");
 /** Message on the site. */
 
 class Message {
-  constructor({from_username, to_username, body}) {
+  constructor(from_username, to_username, body) {
     this.from_username = from_username
     this.to_username = to_username
     this.body = body
@@ -16,7 +16,8 @@ class Message {
    *    {id, from_username, to_username, body, sent_at}
    */
 
-  static async create({from_username, to_username, body}) {
+  static async create(from_username, to_username, body) {
+    console.log("Username", from_username)
     const result = await db.query(
         `INSERT INTO messages (
               from_username,
